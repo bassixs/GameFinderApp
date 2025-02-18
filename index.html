@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Game Finder</title>
+    <!-- Подключение библиотеки Telegram Web App -->
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+    <!-- Подключение файла со стилями -->
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div id="app">
+        <h1>Поиск тиммейтов</h1>
+        <button id="startSearch">Начать поиск</button>
+        <div id="profileCard" class="hidden">
+            <p><strong>Имя:</strong> <span id="name"></span></p>
+            <p><strong>Игра:</strong> <span id="game"></span></p>
+            <p><strong>Часы:</strong> <span id="hours"></span></p>
+            <button id="likeButton">Лайк</button>
+            <button id="dislikeButton">Дизлайк</button>
+        </div>
+    </div>
+
+    <!-- Подключение файла с JavaScript -->
+    <script src="script.js"></script>
+</body>
+</html>
