@@ -26,6 +26,11 @@ button {
     cursor: pointer;
 }
 
+button#saveProfile {
+    background-color: #3498db;
+    color: white;
+}
+
 button#likeButton {
     background-color: #27ae60;
     color: white;

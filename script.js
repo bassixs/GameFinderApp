@@ -1,5 +1,9 @@
 // Инициализация Telegram Web App
-Telegram.WebApp.ready();
+if (window.Telegram && window.Telegram.WebApp) {
+    Telegram.WebApp.ready();
+} else {
+    console.error("Telegram Web App API не найден!");
+}
 
 // Массив тестовых профилей
 const profiles = [
@@ -10,10 +14,14 @@ const profiles = [
 
 let currentProfileIndex = 0;
 
-// Проверяем наличие профиля у пользователя
+// Проверка наличия профиля
 function checkUserProfile() {
     // Отправляем запрос боту для проверки наличия профиля
-    Telegram.WebApp.sendData(JSON.stringify({ action: 'check_profile' }));
+    if (Telegram.WebApp) {
+        Telegram.WebApp.sendData(JSON.stringify({ action: 'check_profile' }));
+    } else {
+        console.error("Telegram Web App API недоступен.");
+    }
 }
 
 // Функция показа формы создания профиля
@@ -39,14 +47,18 @@ document.getElementById('saveProfile').addEventListener('click', () => {
 
 // Функция отправки профиля в бот
 function saveProfileToBot(name, game, hours) {
-    Telegram.WebApp.sendData(JSON.stringify({
-        action: 'save_profile',
-        profile: {
-            name: name,
-            game: game,
-            hours: hours
-        }
-    }));
+    if (Telegram.WebApp) {
+        Telegram.WebApp.sendData(JSON.stringify({
+            action: 'save_profile',
+            profile: {
+                name: name,
+                game: game,
+                hours: hours
+            }
+        }));
+    } else {
+        console.error("Telegram Web App API недоступен.");
+    }
 }
 
 // Функция показа профиля
@@ -85,10 +97,14 @@ function nextProfile() {
 // Отправка данных в бот
 function sendData(action) {
     const profile = profiles[currentProfileIndex];
-    Telegram.WebApp.sendData(JSON.stringify({
-        action: action,
-        profile: profile
-    }));
+    if (Telegram.WebApp) {
+        Telegram.WebApp.sendData(JSON.stringify({
+            action: action,
+            profile: profile
+        }));
+    } else {
+        console.error("Telegram Web App API недоступен.");
+    }
 }
 
 // Начало поиска
@@ -96,6 +112,25 @@ document.getElementById('startSearch').addEventListener('click', () => {
     showProfile();
     document.getElementById('startSearch').classList.add('hidden');
 });
+
+// Обработка ответа от бота
+if (Telegram.WebApp) {
+    Telegram.WebApp.onEvent('mainButtonClicked', function () {
+        const data = JSON.parse(Telegram.WebApp.MainButton.data);
+
+        if (data && data.message) {
+            if (data.message === "create_profile") {
+                // Показываем форму создания профиля
+                showCreateProfileForm();
+            } else if (data.message === "start_search") {
+                // Начинаем поиск
+                document.getElementById('startSearch').classList.remove('hidden');
+            }
+        }
+    });
+} else {
+    console.error("Telegram Web App API недоступен.");
+}
 
 // Проверяем профиль при загрузке приложения
 checkUserProfile();
