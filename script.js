@@ -28,6 +28,7 @@ function checkUserProfile() {
 function showCreateProfileForm() {
     document.getElementById('createProfile').classList.remove('hidden');
     document.getElementById('startSearch').classList.add('hidden');
+    document.getElementById('profileCard').classList.add('hidden');
 }
 
 // Функция сохранения профиля
