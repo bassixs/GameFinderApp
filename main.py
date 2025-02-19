@@ -95,41 +95,45 @@ def start(message):
 def handle_webapp(message):
     data = json.loads(message.web_app_data.data)
     user_id = message.from_user.id
-
+    
     if data['action'] == 'check_profile':
         # Проверяем наличие профиля
         profile = get_profile(user_id)
-
+        
         if profile:
-            # Если профиль существует, отправляем сообщение для начала поиска
+            # Если профиль существует, отправляем команду "start_search"
             bot.send_message(message.chat.id, "Ваш профиль найден. Вы можете начать поиск.")
             Telegram.WebApp.MainButton.setText("Начать поиск")
             Telegram.WebApp.MainButton.setParams({ 'data': json.dumps({ 'message': 'start_search' }) })
         else:
-            # Если профиля нет, отправляем сообщение для создания профиля
+            # Если профиля нет, отправляем команду "create_profile"
             bot.send_message(message.chat.id, "У вас еще нет профиля. Пожалуйста, создайте его.")
             Telegram.WebApp.MainButton.setText("Создать профиль")
             Telegram.WebApp.MainButton.setParams({ 'data': json.dumps({ 'message': 'create_profile' }) })
-
+    
     elif data['action'] == 'save_profile':
         # Сохраняем профиль
         profile = data['profile']
-
+        
         if save_profile(user_id, profile['name'], profile['game'], profile['hours']):
             bot.send_message(message.chat.id, "Ваш профиль успешно сохранен!")
         else:
             bot.send_message(message.chat.id, "Произошла ошибка при сохранении профиля.")
-
+    
     elif data['action'] == 'like':
         # Обработка лайка
         bot.send_message(
             message.chat.id,
             f"Вы поставили лайк профилю {data['profile']['name']}!"
         )
-
+    
     elif data['action'] == 'dislike':
         # Обработка дизлайка
         bot.send_message(
             message.chat.id,
             f"Вы пропустили профиль {data['profile']['name']}."
         )
+
+# Запуск бота
+if __name__ == '__main__':
+    bot.polling()
