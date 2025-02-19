@@ -10,6 +10,45 @@ const profiles = [
 
 let currentProfileIndex = 0;
 
+// Проверяем наличие профиля у пользователя
+function checkUserProfile() {
+    // Отправляем запрос боту для проверки наличия профиля
+    Telegram.WebApp.sendData(JSON.stringify({ action: 'check_profile' }));
+}
+
+// Функция показа формы создания профиля
+function showCreateProfileForm() {
+    document.getElementById('createProfile').classList.remove('hidden');
+    document.getElementById('startSearch').classList.add('hidden');
+}
+
+// Функция сохранения профиля
+document.getElementById('saveProfile').addEventListener('click', () => {
+    const name = document.getElementById('name').value;
+    const game = document.getElementById('game').value;
+    const hours = document.getElementById('hours').value;
+
+    if (name && game && hours) {
+        saveProfileToBot(name, game, hours);
+        document.getElementById('createProfile').classList.add('hidden');
+        document.getElementById('startSearch').classList.remove('hidden');
+    } else {
+        alert("Пожалуйста, заполните все поля.");
+    }
+});
+
+// Функция отправки профиля в бот
+function saveProfileToBot(name, game, hours) {
+    Telegram.WebApp.sendData(JSON.stringify({
+        action: 'save_profile',
+        profile: {
+            name: name,
+            game: game,
+            hours: hours
+        }
+    }));
+}
+
 // Функция показа профиля
 function showProfile() {
     if (currentProfileIndex >= profiles.length) {
@@ -19,9 +58,9 @@ function showProfile() {
     }
 
     const profile = profiles[currentProfileIndex];
-    document.getElementById('name').textContent = profile.name;
-    document.getElementById('game').textContent = profile.game;
-    document.getElementById('hours').textContent = profile.hours + ' часов';
+    document.getElementById('nameDisplay').textContent = profile.name;
+    document.getElementById('gameDisplay').textContent = profile.game;
+    document.getElementById('hoursDisplay').textContent = profile.hours + ' часов';
     document.getElementById('profileCard').classList.remove('hidden');
 }
 
@@ -57,3 +96,6 @@ document.getElementById('startSearch').addEventListener('click', () => {
     showProfile();
     document.getElementById('startSearch').classList.add('hidden');
 });
+
+// Проверяем профиль при загрузке приложения
+checkUserProfile();
