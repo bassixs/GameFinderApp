@@ -14,16 +14,6 @@ const profiles = [
 
 let currentProfileIndex = 0;
 
-// Проверка наличия профиля
-function checkUserProfile() {
-    // Отправляем запрос боту для проверки наличия профиля
-    if (Telegram.WebApp) {
-        Telegram.WebApp.sendData(JSON.stringify({ action: 'check_profile' }));
-    } else {
-        console.error("Telegram Web App API недоступен.");
-    }
-}
-
 // Функция показа формы создания профиля
 function showCreateProfileForm() {
     document.getElementById('createProfile').classList.remove('hidden');
@@ -70,7 +60,7 @@ function showProfile() {
         return;
     }
 
-    const profile = profiles[currentProfileIndex];
+    const profile = profiles[currentProfile];
     document.getElementById('nameDisplay').textContent = profile.name;
     document.getElementById('gameDisplay').textContent = profile.game;
     document.getElementById('hoursDisplay').textContent = profile.hours + ' часов';
@@ -114,24 +104,5 @@ document.getElementById('startSearch').addEventListener('click', () => {
     document.getElementById('startSearch').classList.add('hidden');
 });
 
-// Обработка ответа от бота
-if (Telegram.WebApp) {
-    Telegram.WebApp.onEvent('mainButtonClicked', function () {
-        const data = JSON.parse(Telegram.WebApp.MainButton.data);
-
-        if (data && data.message) {
-            if (data.message === "create_profile") {
-                // Показываем форму создания профиля
-                showCreateProfileForm();
-            } else if (data.message === "start_search") {
-                // Начинаем поиск
-                document.getElementById('startSearch').classList.remove('hidden');
-            }
-        }
-    });
-} else {
-    console.error("Telegram Web App API недоступен.");
-}
-
-// Проверяем профиль при загрузке приложения
-checkUserProfile();
+// Показываем форму создания профиля при загрузке приложения
+showCreateProfileForm();
